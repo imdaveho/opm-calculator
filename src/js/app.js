@@ -18,15 +18,12 @@ var OrderedLookup = {};
 var Breakpoints = [];
 var PreferredRanks = {};
 
-// var claimsLookup = {};
-
 var DataSet = {
 	data: DataStruct,
 	sequence: Sequence,
 	lookup: OrderedLookup,
 	breakpts: Breakpoints,
-	ranks: PreferredRanks,
-	// claimsLookup: claimsLookup, 
+	ranks: PreferredRanks, 
 	prefAll: m.prop(0)
 };
 
