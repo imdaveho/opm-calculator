@@ -1,0 +1,23 @@
+{
+  "name": "opm-calculator",
+  "version": "0.1.0",
+  "description": "Simple application to run through an Options Pricing Distribution model for implied equity values.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dave Ho",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "browserify": "^11.2.0",
+    "gulp": "^3.9.0",
+    "gulp-uglify": "^1.4.1",
+    "lodash": "^3.10.1",
+    "mithril": "^0.2.0",
+    "velocity-animate": "^1.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imdaveho/opm-calculator.git"
+  }
+}
