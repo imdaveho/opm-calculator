@@ -44,11 +44,12 @@ var Formulas = {
     setBreaks: function(dataset) {
         var shares = 0, proceeds = 0;
         var pref_stack = dataset.prefAll();
-
+        var claimer = [];
         dataset.sequence.map(function(price) {
             var coord = dataset.lookup[price];
             // get the total amount of shares @ price range
             coord.map(function(pair) {
+                claimer.push(dataset.data[pair[0]][pair[1]]);
                 shares += dataset.data[pair[0]][pair[1]].count;
                 proceeds += dataset.data[pair[0]][pair[1]].pref;
                 if (pair[0] === 'preferred') {
@@ -57,11 +58,15 @@ var Formulas = {
                     proceeds -= dataset.data[pair[0]][pair[1]].pref
                 }                
             });
+            var bkpt = Formulas.calcBreaks(price, shares, proceeds, pref_stack);
             // since pref rank already gets the 0 value, we skip it
-            if (price != 0) {
-                var bkpt = Formulas.calcBreaks(price, shares, proceeds, pref_stack);
-                dataset.breakpts.push(bkpt)
-            }
+            // if (price != 0) dataset.breakpts.push(bkpt)
+            if (dataset.breakpts.indexOf(bkpt) === -1) dataset.breakpts.push(bkpt);
+            
+            // set claims
+            claimer.map(function(series) {
+                series.claims[bkpt] = series.count / shares;
+            })
         })
     }
 }

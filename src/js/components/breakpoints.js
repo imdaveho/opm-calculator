@@ -49,6 +49,7 @@ var Calculations = {
 			m('pre', JSON.stringify(ctrl.group.ranks)),
 			m('span', 'Breakpoints: '),
 			m('pre', JSON.stringify(ctrl.group.breakpts)),
+			m('span', 'Preference: '),
 			m('div', ctrl.group.prefAll())
 		])
 	}
@@ -121,7 +122,7 @@ var CalculateBtn = {
 
 				Formulas.setBreaks(ctrl.group);
 
-				console.log(JSON.stringify(ctrl.fields, null, 2));
+				// console.log(JSON.stringify(ctrl.fields, null, 2));
 				ctrl.group.breakpts.map(function(pt) {
 					console.log(Math.floor(pt))
 				});

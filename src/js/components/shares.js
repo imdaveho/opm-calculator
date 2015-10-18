@@ -129,8 +129,8 @@ var NextButton = {
 					
 					// Create ordered lookup map:
 					if (sequence.indexOf(seq_price) === -1) sequence.push(seq_price);
-					if(!lookup[price]) lookup[price] = [];
-					lookup[price].push([meta.kind(), meta.series()]);
+					if(!lookup[seq_price]) lookup[seq_price] = [];
+					lookup[seq_price].push([meta.kind(), meta.series()]);
 
 					// set Rank Preference and push to Breakpts
 					if (meta.kind() === 'preferred') {
