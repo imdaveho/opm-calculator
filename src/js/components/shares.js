@@ -111,7 +111,6 @@ var NextButton = {
 					// start dividend calc
 					var dividend = 0;
 					if (meta.divrate()) {
-						// console.log('there is a div rate for: ' + meta.kind() + " " + meta.series());
 						var _rate = (parseFloat(meta.divrate()) / 100) * parseFloat(meta.price());
 						var _inter = deltaDays(valdate(), meta.date(), "/");
 						dividend = _rate * _inter * parseFloat(meta.count());
@@ -122,7 +121,8 @@ var NextButton = {
 						count: fd_count,
 						price: seq_price,
 						pref: tot_pref,
-						claims: {} // init Claims object for Bkpts;
+						claims: {}, // init Claims object for Bkpts;
+						opm:{}
 					}
 
 					fd_sum += fd_count;
@@ -183,9 +183,6 @@ var NextButton = {
 						Velocity(breakptComponent, 'fadeIn')
 					}
 				});
-				// console.log(JSON.stringify(ctrl.group.data, null, 2));
-				// console.log(JSON.stringify(ctrl.group.sequence));
-				// console.log(JSON.stringify(ctrl.group.lookup, null, 2));
 			}
 		}, 'Next')
 	}

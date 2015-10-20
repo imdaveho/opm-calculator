@@ -24,7 +24,7 @@ var Formulas = {
         var nD1 = d1 > 0 ? nD1temp : (1 - nD1temp);
         var nD2 = d2 > 0 ? nD2temp : (1 - nD2temp);
         
-       	return optionValue(_price, nD1, _interest, nD2, strike, time);
+       	return Formulas.optionValue(_price, nD1, _interest, nD2, strike, time);
     },
 
     optionValue: function(price, nD1, interest, nD2, strike, time) {
@@ -41,7 +41,7 @@ var Formulas = {
         return price * shares - proceed + preference
     },
 
-    setBreaks: function(dataset) {
+    setBreaks: function(dataset, callback) {
         var shares = 0, proceeds = 0;
         var pref_stack = dataset.prefAll();
         var claimer = [];
@@ -65,10 +65,57 @@ var Formulas = {
             
             // set claims
             claimer.map(function(series) {
-                series.claims[bkpt] = series.count / shares;
+                var _bkpt = bkpt.toFixed(3);
+                series.claims[_bkpt] = (series.count / shares).toFixed(3);
             })
-        })
-    }
+        });
+        
+        // once data is all prepared, run callback (OPM):
+        // Formulas.doOPM(dataset.data, dataset.breakpts);
+        callback();
+    },
+
+    doOPM: function(data, breakpoints, fields) {
+        // init BS Calc order and local vars
+        spot = parseFloat(fields.spot());
+        // strikes come from breakpts
+        vola = parseFloat(fields.vola() / 100);
+        intr = parseFloat(fields.intr() / 100);
+        div = 0;
+        term = parseFloat(fields.term());
+        
+        var collar = {
+            0: {
+                value: {},
+                collar: {}
+            },
+        };
+
+        // go through bkpts and calc the option value
+        breakpoints.map(function(bkpt) {
+            // do zero (0) value;
+            if(breakpoints.indexOf(bkpt) === 0) collar[0].value = Formulas.setBlackScholes(spot, 0, vola, intr, div, term);
+            var opt_val = Formulas.setBlackScholes(spot, bkpt, vola, intr, div, term);
+            collar[bkpt.toFixed(3)] = {
+                value: opt_val,
+                collar: {}
+            };
+        });
+
+        // set collar values
+        var collar_keys = Object.keys(collar)
+        collar_keys.map(function(value){
+            var idx = collar_keys.indexOf(value);
+            var this_value = collar[value];
+            var next_value = collar_keys[idx + 1];
+            if(next_value != undefined) {
+                this_value.collar['call'] = this_value.value.call - collar[next_value].value.call;
+            } else {
+                this_value.collar['call'] = this_value.value.call;
+            }
+        });
+        return collar;
+    },
 }
 
 module.exports = Formulas;
